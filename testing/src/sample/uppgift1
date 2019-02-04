@@ -1,0 +1,48 @@
+package Labb3;
+
+import java.sql.*;
+
+public class Uppgift1 {
+
+    public static void meny1(){
+        System.out.println("Artister\n========");
+        System.out.println();
+    }
+
+    public static void meny2(){
+        System.out.println();
+        System.out.println("Album\n========");
+        System.out.println();
+    }
+    public static void main(String[] args) {
+        meny1();
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }catch (ClassNotFoundException e){
+            System.out.println("Gick ej");
+        }
+
+        try(Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost/musik?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                "root", "kalle97"
+        )){
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery("select * from musik.artist");
+
+            Statement stmt2 = conn.createStatement();
+            ResultSet result2 = stmt2.executeQuery("select * from musik.album");
+
+            while (result.next()){
+                System.out.println(result.getString(1) + ": " + result.getString(2) + ": " + result.getString(3));
+            }
+
+            meny2();
+            while (result2.next()){
+                System.out.println(result2.getString(1) + ": " + result2.getString(2) + ": " + result2.getString(3));
+            }
+
+        }catch (SQLException e){
+            System.out.println("Fel" + e.getMessage());
+        }
+    }
+}
